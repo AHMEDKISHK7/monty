@@ -1,17 +1,12 @@
-#ifndef _MONTY_H_
-#define _MONTY_H_
+#ifndef MONTY_H
+#define MONTY_H
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
-#include <ctype.h>
-
-#define MOS_STACK 0
-#define MOS_QUEUE 1
-#define MOS_DELIMS " \n\t\a\b"
-
-extern char **operational_str;
+#include <stdlib.h>
+#include <stddef.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -42,76 +37,63 @@ typedef struct instruction_s
 	char *opcode;
 	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
-
 /**
- * struct data_content  - opcode and its function
- * @op_func: the opcode
- * @value: function to handle the opcode
- * @i: number of the line
- * Description: opcode and its function
- * for stack, queues, LIFO, FIFO
+ * struct arg_s - container for var
+ * @stream: file to bo opened and read
+ * @l: line text
+ * @l_n: num of line to trrack
+ * @tk: store broken down tokens
+ * @ins: uasable ins
+ * @n_tk; tokens num
+ * @head: h
+ * @stack_l: num of node in stack
+ * @stack: stack
  */
-typedef struct data_content
+typedef struct arg_s
 {
-	char *op_func;
-	char *value;
-	int i ;
-} data_t;
+	FILE *s;
+        char *l;
+	unsigned int l_n;
+	char **tk;
+	int n_tk;
+	instruction_t *ins;
+	stack_t *head;
+	int stack_l;
+	int stack;
+} arg_t;
 
-/**
- * struct stack_data - opcode and its function
- * @int_value: needed input.
- * @data: needed input.
- * @fp: needed input.
- * @line: needed iput.
- * Description: stack_data
- */
-typedef struct stack_data
-{
-	int int_value;
-	data_t data;
-	FILE *fp;
-	char *line;
-} s_data_s;
+extern arg_t *args;
 
-extern s_data_s mos;
+int dprintf(int fd, const char *format, ...);
+ssize_t getline(char **lineptr, size_t *n, FILE *stream);
+FILE *fdopen(int fd, const char *mode);
 
-int monty_error_for_usage(void);
-int monty_error_for_malloc(void);
-int monty_error_for_file_opening(char *);
-int monty_error_for_unkown_operation(char *, unsigned int);
-int monty_error_for_invlaid_inputs(unsigned int);
+/*ALL FREES FUNCTIONS*/
+void h_free(void);
+void ags_free(void);
+void all_free(void);
+void s_free(stack_t *head);
+void free_tok(void);
 
-int monty_error_for_pop(unsigned int);
-int monty_error_for_pint(unsigned int);
-int monty_error_for_small_stack(unsigned int, char *);
-int monty_error_for_div(unsigned int);
-int monty_error_for_pchar(unsigned int, char *);
 
-char *pointer_to_int(int);
-unsigned int int_absolute(int);
-int buffer_length(unsigned int, unsigned int);
-void set_num(unsigned int, unsigned int, char *, int);
-
-void monty_func_for_push(stack_t **, unsigned int);
-void monty_func_for_pall(stack_t **, unsigned int);
-void monty_func_for_pint(stack_t **, unsigned int);
-void monty_func_for_pop(stack_t **, unsigned int);
-void monty_func_for_swap(stack_t **, unsigned int);
-
-void monty_func_for_add(stack_t **, unsigned int);
-void monty_func_for_sub(stack_t **, unsigned int);
-void monty_func_for_div(stack_t **, unsigned int);
-void monty_func_for_mul(stack_t **, unsigned int);
-void monty_func_for_mod(stack_t **, unsigned int);
-
-void monty_func_for_nop(stack_t **, unsigned int);
-void monty_func_for_pchar(stack_t **, unsigned int);
-void monty_func_for_pstr(stack_t **, unsigned int);
-
-void monty_func_for_rotl(stack_t **, unsigned int);
-void monty_func_for_rotr(stack_t **, unsigned int);
-void monty_func_for_stack(stack_t **, unsigned int);
-void monty_func_for_queue(stack_t **, unsigned int);
-
+void add_monty(stack_t **stack, unsigned int l_n);
+void c_file(void);
+int q_com(void);
+void del(void);
+void g_ins(void);
+void invalid_message(void);
+void g_s(char *filename);
+void gs_messgae(char *filename);
+void i_args(void);
+int c_num(char *s);
+void malloc_m(void);
+void nop(stack_t **stack, unsigned int l_n);
+void push(stack_t **stack, unsigned int l_n);
+void pall(stack_t **stack, unsigned int l_n);
+void run(void);
+void pop(stack_t **stack, unsigned int l_n);
+void pint(stack_t **stack, unsigned int l_n);
+void v_args(int argc);
+void tokenizer(void);
+void swap(stack_t **stack, unsigned int l_n);
 #endif
